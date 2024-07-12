@@ -54,14 +54,9 @@ const createBlog = asyncHandler(async (req, res) => {
     user.Blogs.push(blog._id);
     await user.save();
 
-    const finalBlog = await Blog.findById(blog._id).populate(
-      "Author",
-      "-password -refreshToken",
-    );
-
     return res
       .status(200)
-      .json(new ApiResponse(200, finalBlog, "Blog created Succesfully"));
+      .json(new ApiResponse(200, blog, "Blog created Succesfully"));
   } catch (error) {
     console.log(error);
     throw new ApiError(400, "Failed to create blog");
@@ -82,10 +77,24 @@ const getAllBlogs = asyncHandler(async (req, res) => {
   }
 });
 
-const updateBlog = asyncHandler(async (req, res) => {});
+const getPost = asyncHandler(async (req, res) => {
+  const { id } = req.params;
 
-const allBlogs = asyncHandler(async (req, res) => {});
+  const blogDetails = await Blog.findById(id);
+
+  if (!blogDetails) {
+    throw new ApiError(400, ":: Might have directed to the wrong URL ::");
+  }
+
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(200, blogDetails, "Succesfully redirected to the post !!"),
+    );
+});
+
+const updateBlog = asyncHandler(async (req, res) => {});
 
 const deleteBlog = asyncHandler(async (req, res) => {});
 
-export { createBlog, updateBlog, allBlogs, deleteBlog, getAllBlogs };
+export { createBlog, updateBlog, deleteBlog, getAllBlogs, getPost };

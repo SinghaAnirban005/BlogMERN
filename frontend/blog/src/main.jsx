@@ -16,6 +16,7 @@ import Login from "./components/Login.jsx";
 import Register from "./components/Register.jsx";
 import AllPosts from "./components/All-Posts/AllPosts.jsx";
 import Postform from "./components/PostForm/postform.jsx";
+import Post from "./components/Post/Post.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -25,6 +26,7 @@ const router = createBrowserRouter(
       <Route path="register" element={<Register />} />
       <Route path="add-post" element={<Postform />} />
       <Route path="all-posts" element={<AllPosts />} />
+      <Route path="post/:id" element={<Post />} />
     </Route>
   )
 );

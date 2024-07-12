@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Card from "../Card/Card.jsx";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 function AllPosts() {
   const [blogs, setBlogs] = useState([]);
@@ -36,9 +37,11 @@ function AllPosts() {
       {!loading && (
         <div className="flex items-center justify-center h-[30em] bg-slate-600">
           {blogs.map((blog) => (
-            <div id={blog._id} className="flex flex-col mx-4">
-              <Card title={blog.title} imgSource={blog.image} />
-            </div>
+            <Link to={`/post/${blog._id}`}>
+              <div id={blog._id} className="flex flex-col mx-4">
+                <Card title={blog.title} imgSource={blog.image} />
+              </div>
+            </Link>
           ))}
         </div>
       )}
