@@ -4,7 +4,6 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { User } from "../models/user.model.js";
 import { Blog } from "../models/blog.model.js";
-import mongoose from "mongoose";
 
 const createBlog = asyncHandler(async (req, res) => {
   console.log(req.files);
@@ -70,18 +69,17 @@ const createBlog = asyncHandler(async (req, res) => {
 });
 
 const getAllBlogs = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.user._id).select(
-    "-password -refreshToken",
-  );
+  try {
+    const blogs = await Blog.find({});
+    console.log(blogs);
 
-  if (!user) {
-    throw new ApiError(400, "No blogs available");
+    return res
+      .status(200)
+      .json(new ApiResponse(200, blogs, "Fetched all Blogs"));
+  } catch (error) {
+    console.error(error);
+    throw new ApiError(500, "Blogs couldn't be fetched !!");
   }
-  const bl = await Blog.findById(user.Blogs[0]);
-
-  return res
-    .status(200)
-    .json(new ApiResponse(200, bl, "Succesfully fetched all blogs"));
 });
 
 const updateBlog = asyncHandler(async (req, res) => {});

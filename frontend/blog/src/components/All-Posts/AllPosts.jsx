@@ -4,30 +4,45 @@ import axios from "axios";
 
 function AllPosts() {
   const [blogs, setBlogs] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     (async () => {
-      const response = await axios.get("/api/v1/blogs/all-posts");
-      console.log(response);
+      try {
+        const response = await axios.get("/api/v1/blogs/all-posts");
+        console.log(response);
 
-      if (!response) {
-        console.error("Request couldn't be sent");
+        if (!response) {
+          console.error("Request couldn't be sent");
+        }
+
+        setBlogs(response.data.data);
+      } catch (error) {
+        console.error("Failed axios request to GET blogs", error);
+      } finally {
+        setLoading(false);
       }
-
-      setBlogs(response.data.data);
     })();
   }, []);
 
   return (
-    <div className="flex items-center justify-center h-[30em] bg-slate-600">
-      {/* {blogs.map((blog) => (
-        <div id={blog._id}>
-          <Card title={blog.title} imgSource={blog.image} />
+    <>
+      {loading && (
+        <div className="flex items-center justify-center h-[30em] bg-slate-600">
+          <h1>Loading ...</h1>
         </div>
-      ))} */}
+      )}
 
-      <Card title={blogs.title} imgSource={blogs.image} />
-    </div>
+      {!loading && (
+        <div className="flex items-center justify-center h-[30em] bg-slate-600">
+          {blogs.map((blog) => (
+            <div id={blog._id} className="flex flex-col mx-4">
+              <Card title={blog.title} imgSource={blog.image} />
+            </div>
+          ))}
+        </div>
+      )}
+    </>
   );
 }
 

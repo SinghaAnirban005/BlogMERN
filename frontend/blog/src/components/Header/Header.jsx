@@ -66,11 +66,11 @@ function Header() {
         <Logo />
       </div>
 
-      <nav className="flex">
+      <nav className="flex mx-4">
         {navItems.map((item) => (
-          <div key={item.slug} className="flex">
+          <div key={item.slug} className="flex mx-4">
             <Link to={item.slug}>
-              <button className="hover:bg-slate-200 rounded-lg ml-4">
+              <button className="hover:bg-slate-200 rounded-lg bg-slate-500">
                 {item.authStatus && <div className="m-2">{item.name}</div>}
               </button>
             </Link>
@@ -78,7 +78,7 @@ function Header() {
         ))}
         {status && (
           <button
-            className="rounded-lg ml-4 bg-red-700 hover:bg-red-600"
+            className="rounded-lg bg-red-700 w-[5em] hover:bg-red-600"
             onClick={handleLogout}
           >
             Logout
