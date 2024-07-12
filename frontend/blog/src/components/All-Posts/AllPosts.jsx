@@ -7,8 +7,8 @@ function AllPosts() {
 
   useEffect(() => {
     (async () => {
-      const response = await axios.get("/api/v1/users/all-posts");
-      console.log(response.data.data);
+      const response = await axios.get("/api/v1/blogs/all-posts");
+      console.log(response);
 
       if (!response) {
         console.error("Request couldn't be sent");
@@ -20,11 +20,13 @@ function AllPosts() {
 
   return (
     <div className="flex items-center justify-center h-[30em] bg-slate-600">
-      {blogs.map((blog) => (
+      {/* {blogs.map((blog) => (
         <div id={blog._id}>
           <Card title={blog.title} imgSource={blog.image} />
         </div>
-      ))}
+      ))} */}
+
+      <Card title={blogs.title} imgSource={blogs.image} />
     </div>
   );
 }

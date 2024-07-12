@@ -52,43 +52,13 @@ const createBlog = asyncHandler(async (req, res) => {
 
     console.log(blog.Author);
 
-    // await User.findByIdAndUpdate(
-    //   user._id,
-    //   { $push: { Blogs: blog } },
+    user.Blogs.push(blog._id);
+    await user.save();
 
-    //   {
-    //     new: true,
-    //   },
-    // );
-
-    // console.log(user.Blogs);
-
-    // const userBlogs = await User.aggregate([
-    //   {
-    //     $match: {
-    //       _id: new mongoose.Types.ObjectId(user._id),
-    //     },
-    //   },
-    //   {
-    //     $lookup: {
-    //       from: "blogs",
-    //       localField: "",
-    //     },
-    //   },
-    // ]);
-    await User.findByIdAndUpdate(
-      user._id,
-      {
-        $push: { Blogs: blog },
-      },
-      {
-        new: true,
-      },
+    const finalBlog = await Blog.findById(blog._id).populate(
+      "Author",
+      "-password -refreshToken",
     );
-
-    console.log(user.Blogs);
-
-    const finalBlog = await Blog.findById(blog._id);
 
     return res
       .status(200)
@@ -99,10 +69,25 @@ const createBlog = asyncHandler(async (req, res) => {
   }
 });
 
+const getAllBlogs = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user._id).select(
+    "-password -refreshToken",
+  );
+
+  if (!user) {
+    throw new ApiError(400, "No blogs available");
+  }
+  const bl = await Blog.findById(user.Blogs[0]);
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, bl, "Succesfully fetched all blogs"));
+});
+
 const updateBlog = asyncHandler(async (req, res) => {});
 
 const allBlogs = asyncHandler(async (req, res) => {});
 
 const deleteBlog = asyncHandler(async (req, res) => {});
 
-export { createBlog, updateBlog, allBlogs, deleteBlog };
+export { createBlog, updateBlog, allBlogs, deleteBlog, getAllBlogs };
