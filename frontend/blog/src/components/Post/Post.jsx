@@ -1,32 +1,83 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { ApiError } from "../../../../../backend/src/utils/ApiError";
 
 function Post() {
   const { id } = useParams();
-  const [blog, setBlog] = useState(null);
+  const [blog, setBlog] = useState("");
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    (async () => {
-      const response = await axios.get(`/api/v1/blogs/${id}`);
+    try {
+      (async () => {
+        const response = await axios.get(`/api/v1/blogs/post/${id}`);
 
-      if (!response) {
-        throw new ApiError(400, "Response fetching failed");
-      }
+        if (!response) {
+          throw new ApiError(400, "Response fetching failed");
+        }
 
-      setBlog(response);
-    })();
+        setBlog(response.data.data);
+      })();
+    } catch (error) {
+      console.log(error);
+      throw error;
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
-  return (
-    <div className="flex items-center justify-center h-[30em] bg-slate-600">
-      <button className="bg-red-600">Delete</button>
+  const handleDeletion = async function () {
+    console.log(id);
+    try {
+      const res = await axios.post(`/api/v1/blogs/post/${id}`);
+      console.log(res);
+      if (!res) {
+        console.log("Couldn't hit delete API endpoint");
+      }
+    } catch (error) {
+      console.log(error);
+      throw new Error("Failed to delete blog");
+    } finally {
+      setLoading(false);
+      navigate("/all-posts");
+    }
+  };
 
-      <div>
-        <h1>post id: {id}</h1>
-      </div>
-    </div>
+  return (
+    <>
+      {loading && (
+        <div className="flex items-center justify-center h-[30em] bg-slate-600">
+          <h1>Loading ....</h1>
+        </div>
+      )}
+
+      {!loading && (
+        <div className="flex items-center justify-between px-12 h-[30em] bg-slate-600">
+          <div className="flex">
+            <img
+              src={blog.image}
+              className="rounded-xl h-[20em] w-[20em]"
+              alt="PostIMG"
+            />
+            <button className="bg-slate-600" onClick={handleDeletion}>
+              DELETE
+            </button>
+          </div>
+
+          <div className="flex-col bg-slate-400 h-[20em] w-[45em] rounded-xl">
+            <div className="flex justify-center mt-[2em]">
+              <h1 className="font-bold text-xl">{blog.title}</h1>
+            </div>
+
+            <div className="flex justify-center mt-[2em]">
+              <p>{blog.content}</p>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 }
 

@@ -34,7 +34,13 @@ function AllPosts() {
         </div>
       )}
 
-      {!loading && (
+      {blogs.length === 0 && !loading && (
+        <div className="flex items-center justify-center h-[30em] bg-slate-600">
+          <h1>Create new Posts to view Here</h1>
+        </div>
+      )}
+
+      {blogs.length !== 0 && !loading && (
         <div className="flex items-center justify-center h-[30em] bg-slate-600">
           {blogs.map((blog) => (
             <Link to={`/post/${blog._id}`}>

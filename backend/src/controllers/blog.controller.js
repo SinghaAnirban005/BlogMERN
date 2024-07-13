@@ -4,6 +4,7 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { User } from "../models/user.model.js";
 import { Blog } from "../models/blog.model.js";
+import mongoose from "mongoose";
 
 const createBlog = asyncHandler(async (req, res) => {
   console.log(req.files);
@@ -66,7 +67,6 @@ const createBlog = asyncHandler(async (req, res) => {
 const getAllBlogs = asyncHandler(async (req, res) => {
   try {
     const blogs = await Blog.find({});
-    console.log(blogs);
 
     return res
       .status(200)
@@ -89,12 +89,27 @@ const getPost = asyncHandler(async (req, res) => {
   return res
     .status(200)
     .json(
-      new ApiResponse(200, blogDetails, "Succesfully redirected to the post !!"),
+      new ApiResponse(
+        200,
+        blogDetails,
+        "Succesfully redirected to the post !!",
+      ),
     );
 });
 
 const updateBlog = asyncHandler(async (req, res) => {});
 
-const deleteBlog = asyncHandler(async (req, res) => {});
+const deleteBlog = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const deletedBlog = await Blog.findByIdAndDelete(id);
+
+  if (!deletedBlog) {
+    throw new ApiError(400, "Couldn't pass id of blog !!");
+  }
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, {}, "Blog has been Succesfully Deleted"));
+});
 
 export { createBlog, updateBlog, deleteBlog, getAllBlogs, getPost };
