@@ -29,7 +29,7 @@ function Login() {
     }
   };
 
-  useEffect(() => {}, []);
+  // useEffect(() => {}, []);
 
   return (
     <div className="flex justify-center items-center h-[30em] bg-slate-600">

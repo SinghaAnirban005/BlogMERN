@@ -4,7 +4,7 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { User } from "../models/user.model.js";
 import { Blog } from "../models/blog.model.js";
-import mongoose from "mongoose";
+import { v2 as cloudinary } from 'cloudinary';
 
 const createBlog = asyncHandler(async (req, res) => {
   console.log(req.files);
@@ -101,11 +101,20 @@ const updateBlog = asyncHandler(async (req, res) => {});
 
 const deleteBlog = asyncHandler(async (req, res) => {
   const { id } = req.params;
+  const blog = await Blog.findById(id)
+  const imgURL = blog.image
   const deletedBlog = await Blog.findByIdAndDelete(id);
+
 
   if (!deletedBlog) {
     throw new ApiError(400, "Couldn't pass id of blog !!");
   }
+
+ if(!imgURL){
+    throw new ApiError(400, "Couldn't find imgURL")
+ }
+
+ await cloudinary.uploader.destroy(imgURL)
 
   return res
     .status(200)

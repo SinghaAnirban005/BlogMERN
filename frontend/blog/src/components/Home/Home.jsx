@@ -2,6 +2,7 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import axios from "axios";
+import { FidgetSpinner } from "react-loader-spinner";
 
 function Home() {
   const [loading, setLoading] = useState(true);
@@ -17,14 +18,27 @@ function Home() {
         setName(username.data.data.fullName);
       }
 
-      setLoading(false);
+      setTimeout(() => {
+        setLoading(false);
+      }, 500)
+      
     })();
   }, []);
 
   return (
     <div className="flex items-center justify-center h-[30em] bg-slate-600">
-      {loading && <div> Loading ... Please Wait !! </div>}
-      {!status && (
+      {loading && <div> 
+        <FidgetSpinner
+            visible={true}
+            height="80"
+            width="80"
+            ariaLabel="fidget-spinner-loading"
+            wrapperStyle={{}}
+            wrapperClass="fidget-spinner-wrapper"
+        />
+  </div>}
+
+      {!status && !loading && (
         <div className="flex-col bg-slate-300 mt-4 h-[10em] w-[20em] rounded-lg">
           <h1 className="text-center mt-[3em]">
             Welcome to our blog application
@@ -33,7 +47,7 @@ function Home() {
         </div>
       )}
 
-      {status && <h1>{`Welcome ${name}`}</h1>}
+      {status && !loading && <h1>{`Welcome ${name}`}</h1>}
     </div>
   );
 }

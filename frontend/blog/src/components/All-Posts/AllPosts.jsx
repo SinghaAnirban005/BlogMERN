@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Card from "../Card/Card.jsx";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import { BallTriangle } from "react-loader-spinner"
 
 function AllPosts() {
   const [blogs, setBlogs] = useState([]);
@@ -30,7 +31,16 @@ function AllPosts() {
     <>
       {loading && (
         <div className="flex items-center justify-center h-[30em] bg-slate-600">
-          <h1>Loading ...</h1>
+          <BallTriangle
+  height={100}
+  width={100}
+  radius={5}
+  color="#4fa94d"
+  ariaLabel="ball-triangle-loading"
+  wrapperStyle={{}}
+  wrapperClass=""
+  visible={true}
+  />
         </div>
       )}
 

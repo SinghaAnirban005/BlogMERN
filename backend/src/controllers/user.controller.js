@@ -3,8 +3,6 @@ import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { User } from "../models/user.model.js";
 import jwt from "jsonwebtoken";
-import mongoose from "mongoose";
-import { Blog } from "../models/blog.model.js";
 
 const generateAccessAndRefreshTokens = async (userId) => {
   try {
@@ -12,8 +10,6 @@ const generateAccessAndRefreshTokens = async (userId) => {
 
     const accessToken = await user.generateAccessToken();
     const refreshToken = await user.generateRefreshToken();
-
-    console.log(accessToken);
 
     user.refreshToken = refreshToken;
     await user.save({
@@ -141,6 +137,7 @@ const userLogin = asyncHandler(async (req, res) => {
         ),
       );
   } catch (error) {
+    console.error(error)
     throw new ApiError(500, "Failed to Login");
   }
 });
