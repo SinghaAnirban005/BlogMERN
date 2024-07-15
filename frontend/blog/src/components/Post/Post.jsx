@@ -61,9 +61,6 @@ function Post() {
               className="rounded-xl h-[20em] w-[20em]"
               alt="PostIMG"
             />
-            <button className="bg-slate-600" onClick={handleDeletion}>
-              DELETE
-            </button>
           </div>
 
           <div className="flex-col bg-slate-400 h-[20em] w-[45em] rounded-xl">
@@ -71,8 +68,19 @@ function Post() {
               <h1 className="font-bold text-xl">{blog.title}</h1>
             </div>
 
-            <div className="flex justify-center mt-[2em]">
-              <p>{blog.content}</p>
+            <div className="flex-col justify-center mt-[2em]">
+              <div className="flex justify-center h-[10em]">
+                <p>{blog.content}</p>
+              </div>
+
+              <div className="flex justify-center">
+                <button
+                  className="bg-red-600 w-[5em] rounded-lg"
+                  onClick={handleDeletion}
+                >
+                  Delete
+                </button>
+              </div>
             </div>
           </div>
         </div>

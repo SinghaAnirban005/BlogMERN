@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function Postform() {
   const { register, handleSubmit } = useForm();
   const [error, setError] = useState("");
   const formData = new FormData();
+  const navigate = useNavigate();
 
   const handleForm = async (data) => {
     console.log(data);
@@ -24,6 +26,8 @@ function Postform() {
     } catch (error) {
       setError(error.message);
       throw new Error("Could not create blog");
+    } finally {
+      navigate("/all-posts");
     }
   };
 
