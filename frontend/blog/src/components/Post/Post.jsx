@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import { ApiError } from "../../../../../backend/src/utils/ApiError";
+import {Hourglass}  from "react-loader-spinner"
 
 function Post() {
   const { id } = useParams();
@@ -24,7 +25,9 @@ function Post() {
       console.log(error);
       throw error;
     } finally {
-      setLoading(false);
+      setTimeout(() => {
+        setLoading(false);
+      }, 2000)
     }
   }, []);
 
@@ -49,7 +52,15 @@ function Post() {
     <>
       {loading && (
         <div className="flex items-center justify-center h-[30em] bg-slate-600">
-          <h1>Loading ....</h1>
+          <Hourglass
+            visible={true}
+            height="80"
+            width="80"
+            ariaLabel="hourglass-loading"
+            wrapperStyle={{}}
+            wrapperClass=""
+            colors={['#306cce', '#72a1ed']}
+  />
         </div>
       )}
 

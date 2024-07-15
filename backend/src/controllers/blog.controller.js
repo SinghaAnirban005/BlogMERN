@@ -4,7 +4,7 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { User } from "../models/user.model.js";
 import { Blog } from "../models/blog.model.js";
-import { v2 as cloudinary } from 'cloudinary';
+import { deleteOnCloudinary } from "../utils/cloudinary.js";
 
 const createBlog = asyncHandler(async (req, res) => {
   console.log(req.files);
@@ -52,9 +52,8 @@ const createBlog = asyncHandler(async (req, res) => {
 
     console.log(blog.Author);
 
-    user.Blogs.push(blog._id);
-    await user.save();
-
+    // user.Blogs.push(blog._id);
+    // await user.save()
     return res
       .status(200)
       .json(new ApiResponse(200, blog, "Blog created Succesfully"));
@@ -100,11 +99,24 @@ const getPost = asyncHandler(async (req, res) => {
 const updateBlog = asyncHandler(async (req, res) => {});
 
 const deleteBlog = asyncHandler(async (req, res) => {
-  const { id } = req.params;
-  const blog = await Blog.findById(id)
-  const imgURL = blog.image
-  const deletedBlog = await Blog.findByIdAndDelete(id);
+  try {
+    const { id } = req.params;
+    const blog = await Blog.findById(id)
+    const imgURL = blog.image
 
+    
+    const parts = imgURL.split('/');
+    const uploadIndex = parts.indexOf('upload');
+  
+    if (uploadIndex !== -1 && uploadIndex < parts.length - 1) {
+    // The next part after 'upload' is the public_id
+    const publicId = parts[uploadIndex + 2];
+    const arr = publicId.split(".")
+    const newId = arr[0]
+    
+    console.log(newId); 
+
+  const deletedBlog = await Blog.findByIdAndDelete(id);
 
   if (!deletedBlog) {
     throw new ApiError(400, "Couldn't pass id of blog !!");
@@ -114,11 +126,18 @@ const deleteBlog = asyncHandler(async (req, res) => {
     throw new ApiError(400, "Couldn't find imgURL")
  }
 
- await cloudinary.uploader.destroy(imgURL)
+ await deleteOnCloudinary(newId)
 
   return res
     .status(200)
     .json(new ApiResponse(200, {}, "Blog has been Succesfully Deleted"));
-});
+}
+  }
+    catch (error) {
+      throw new ApiError(500, "Failed to delete")
+  }
+  
+})
+
 
 export { createBlog, updateBlog, deleteBlog, getAllBlogs, getPost };

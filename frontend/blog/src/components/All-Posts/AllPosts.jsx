@@ -32,15 +32,15 @@ function AllPosts() {
       {loading && (
         <div className="flex items-center justify-center h-[30em] bg-slate-600">
           <BallTriangle
-  height={100}
-  width={100}
-  radius={5}
-  color="#4fa94d"
-  ariaLabel="ball-triangle-loading"
-  wrapperStyle={{}}
-  wrapperClass=""
-  visible={true}
-  />
+              height={100}
+              width={100}
+              radius={5}
+              color="#4fa94d"
+              ariaLabel="ball-triangle-loading"
+              wrapperStyle={{}}
+              wrapperClass=""
+              visible={true}
+          />
         </div>
       )}
 
