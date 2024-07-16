@@ -27,6 +27,7 @@ const router = createBrowserRouter(
       <Route path="add-post" element={<Postform />} />
       <Route path="all-posts" element={<AllPosts />} />
       <Route path="post/:id" element={<Post />} />
+      <Route path="update-post/:id" element={<Postform />} />
     </Route>
   )
 );

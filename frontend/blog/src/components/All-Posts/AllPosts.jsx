@@ -3,6 +3,7 @@ import Card from "../Card/Card.jsx";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { BallTriangle } from "react-loader-spinner"
+import Slider from "react-slick"
 
 function AllPosts() {
   const [blogs, setBlogs] = useState([]);
@@ -26,6 +27,14 @@ function AllPosts() {
       }
     })();
   }, []);
+
+  const options = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+  }
 
   return (
     <>
@@ -53,11 +62,17 @@ function AllPosts() {
       {blogs.length !== 0 && !loading && (
         <div className="flex items-center justify-center h-[30em] bg-slate-600">
           {blogs.map((blog) => (
-            <Link to={`/post/${blog._id}`}>
-              <div id={blog._id} className="flex flex-col mx-4">
+
+           
+              <Link to={`/post/${blog._id}`}>
+               
+              <div id={blog._id} className="flex mx-4">
                 <Card title={blog.title} imgSource={blog.image} />
               </div>
+           
             </Link>
+           
+
           ))}
         </div>
       )}

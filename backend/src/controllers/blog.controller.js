@@ -96,7 +96,51 @@ const getPost = asyncHandler(async (req, res) => {
     );
 });
 
-const updateBlog = asyncHandler(async (req, res) => {});
+const updateBlog = asyncHandler(async (req, res) => {
+
+ try {
+  const { title , content } = req.body
+  const { id } = req.params
+
+  const imagePath = req.file?.path;
+  if (!imagePath) {
+    throw new ApiError(400, "Image file is required");
+  }
+
+  const uploadedImage = await uploadOnCloudinary(imagePath);
+
+  if (!uploadedImage) {
+    throw new ApiError(400, "Image file is required");
+  }
+
+  const response = await Blog.findByIdAndUpdate(
+    id,
+    {
+      title: title,
+      image: uploadedImage.url,
+      content: content
+    }
+  )
+
+  if(!response) {
+    throw new ApiError(404, "Couldn't find the blog")
+  }
+
+  return res
+  .status(200)
+  .json( 
+    new ApiResponse(
+      200,
+      response,
+      "Successfully updated the blog"
+    )
+  )
+ } catch (error) {
+    console.error(error)
+    throw new ApiError(500, error.message)
+ }
+
+});
 
 const deleteBlog = asyncHandler(async (req, res) => {
   try {
@@ -109,7 +153,7 @@ const deleteBlog = asyncHandler(async (req, res) => {
     const uploadIndex = parts.indexOf('upload');
   
     if (uploadIndex !== -1 && uploadIndex < parts.length - 1) {
-    // The next part after 'upload' is the public_id
+    
     const publicId = parts[uploadIndex + 2];
     const arr = publicId.split(".")
     const newId = arr[0]
@@ -130,7 +174,13 @@ const deleteBlog = asyncHandler(async (req, res) => {
 
   return res
     .status(200)
-    .json(new ApiResponse(200, {}, "Blog has been Succesfully Deleted"));
+    .json(
+      new ApiResponse(
+        200, 
+        {}, 
+        "Blog has been Succesfully Deleted"
+      )
+    );
 }
   }
     catch (error) {
@@ -139,5 +189,33 @@ const deleteBlog = asyncHandler(async (req, res) => {
   
 })
 
+const getBlogDetails = asyncHandler( async (req, res) => {
 
-export { createBlog, updateBlog, deleteBlog, getAllBlogs, getPost };
+  const { id } = req.params
+
+  const blog = await Blog.findById(id)
+  if(!blog){
+    console.log(id)
+    throw new ApiError(400, "Couldn't find Blog !!")
+  }
+
+
+  return res
+  .status(200)
+  .json(new ApiResponse(
+    200,
+    blog,
+    "Blog details have been fetched succesfully"
+  ))
+
+})
+
+
+export { 
+        createBlog, 
+        updateBlog, 
+        deleteBlog, 
+        getAllBlogs, 
+        getPost,
+        getBlogDetails 
+  };

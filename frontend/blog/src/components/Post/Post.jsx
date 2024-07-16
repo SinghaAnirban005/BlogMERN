@@ -3,12 +3,15 @@ import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import { ApiError } from "../../../../../backend/src/utils/ApiError";
 import {Hourglass}  from "react-loader-spinner"
+import { useDispatch } from "react-redux"
+import { update } from "../../store/Slice.js";
 
 function Post() {
   const { id } = useParams();
   const [blog, setBlog] = useState("");
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const dispatch = useDispatch()
 
   useEffect(() => {
     try {
@@ -48,6 +51,24 @@ function Post() {
     }
   };
 
+  const handleUpdate = async() => {
+    // try {
+    //   const res = await axios.get(`/api/v1/blogs/get-post/${id}`)
+      
+    //   if(!res) {
+    //   throw new Error("Couldn't get post")
+    // }
+
+    //   console.log(res)
+    //   dispatch(update(res.data.data))
+    //  
+    // } catch (error) {
+    //   console.error(error)
+    //   throw new Error(error)
+    // }
+    navigate(`/update-post/${id}`)
+  }
+
   return (
     <>
       {loading && (
@@ -86,10 +107,16 @@ function Post() {
 
               <div className="flex justify-center">
                 <button
-                  className="bg-red-600 w-[5em] rounded-lg"
+                  className="bg-red-600 w-[5em] rounded-lg mr-2"
                   onClick={handleDeletion}
                 >
                   Delete
+                </button>
+
+                <button 
+                className="bg-lime-600 w-[5em] rounded-lg ml-2" 
+                onClick={handleUpdate}>
+                  Update
                 </button>
               </div>
             </div>

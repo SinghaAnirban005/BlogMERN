@@ -1,19 +1,50 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { update } from "../../store/Slice.js";
 
 function Postform() {
-  const { register, handleSubmit } = useForm();
+
+  const { register, handleSubmit ,setValue } = useForm();
   const [error, setError] = useState("");
   const formData = new FormData();
   const navigate = useNavigate();
+  const dispatch = useDispatch()
+  const [title, setTitle] = useState('')
+  const [content, setContent] = useState('')
+
+  const { id } = useParams()
+
+ // const post = useSelector((state) => state.blog)
+
+  if(id){
+    useEffect(() => {
+      (
+        async() => {
+          const res = await axios.get(`/api/v1/blogs/get-post/${id}`)
+  
+          if(!res) {
+            throw new ApiError(400, "Failed to fetch blog details")
+          }
+  
+          setValue("title", res.data.data.title)
+          setValue("image", res.data.data.image)
+          setValue("content", res.data.data.content)
+        }
+      )()
+    }, [])
+  }
+
+
 
   const handleForm = async (data) => {
-    console.log(data);
-    formData.append("title", data.title);
-    formData.append("image", data.image[0]);
-    formData.append("content", data.content);
+   
+    if(!id) {
+      formData.append("title", data.title);
+      formData.append("image", data.image[0]);
+      formData.append("content", data.content);
 
     try {
       const response = await axios.post("/api/v1/blogs/add-post", formData);
@@ -23,13 +54,37 @@ function Postform() {
       }
 
       console.log(response);
-    } catch (error) {
+
+    } 
+    catch (error) {
       setError(error.message);
       throw new Error("Could not create blog");
-    } finally {
+    } 
+    finally {
       navigate("/all-posts");
     }
-  };
+  }
+
+  else {
+      try {
+        formData.append("title", data.title);
+        formData.append("image", data.image[0]);
+        formData.append("content", data.content);
+        const response = await axios.post(`/api/v1/blogs/update-post/${id}`, formData)
+
+        if(!response) {
+          throw new ApiError(400, "Failed to fetch response")
+        }
+      } catch (error) {
+        console.error(error.message)
+        throw new Error(error)
+      }
+      finally{
+        navigate("/all-posts")
+      }
+
+    }
+};
 
   return (
     <div className="flex items-center justify-center h-[30em] bg-slate-600">
@@ -48,6 +103,7 @@ function Postform() {
                 {...register("title", {
                   required: true,
                 })}
+                defaultValue={title}
               />
             </div>
           </div>
@@ -75,7 +131,7 @@ function Postform() {
               className="w-[8em] h-[3em] bg-blue-600 hover:bg-blue-500 rounded-lg"
               type="submit"
             >
-              Submit
+              {id ? <>Update</> : <>Submit</>}
             </button>
           </div>
         </div>
@@ -90,6 +146,7 @@ function Postform() {
                 {...register("content", {
                   required: true,
                 })}
+                defaultValue={content}
               />
             </div>
           </div>
