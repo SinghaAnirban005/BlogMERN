@@ -6,9 +6,9 @@ function Logo() {
     <>
       <Link to="/">
         <img
-          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT1hRzUBnp6zUGje4oOAbyN23nXJdcQhL1wUA&s"
+          src="https://cdn.logojoy.com/wp-content/uploads/2018/05/30164225/572.png"
           alt="Logo"
-          className="h-[40px] w-[40px] rounded-xl cursor-pointer"
+          className="h-[50px] w-[70px] rounded-xl cursor-pointer"
         />
       </Link>
     </>

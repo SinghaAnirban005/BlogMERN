@@ -102,6 +102,24 @@ const updateBlog = asyncHandler(async (req, res) => {
   const { title , content } = req.body
   const { id } = req.params
 
+  // performing deletion on old image uploaded 
+  const blog = await Blog.findById(id)
+  const imgURL = blog.image
+
+    
+  const parts = imgURL.split('/');
+  const uploadIndex = parts.indexOf('upload');
+
+  if (uploadIndex !== -1 && uploadIndex < parts.length - 1){
+  
+  const publicId = parts[uploadIndex + 2];
+  const arr = publicId.split(".")
+  const newId = arr[0]
+
+  await deleteOnCloudinary(newId)
+
+  }
+
   const imagePath = req.file?.path;
   if (!imagePath) {
     throw new ApiError(400, "Image file is required");
@@ -140,10 +158,12 @@ const updateBlog = asyncHandler(async (req, res) => {
     throw new ApiError(500, error.message)
  }
 
-});
+}
+);
 
 const deleteBlog = asyncHandler(async (req, res) => {
   try {
+    
     const { id } = req.params;
     const blog = await Blog.findById(id)
     const imgURL = blog.image
@@ -152,7 +172,7 @@ const deleteBlog = asyncHandler(async (req, res) => {
     const parts = imgURL.split('/');
     const uploadIndex = parts.indexOf('upload');
   
-    if (uploadIndex !== -1 && uploadIndex < parts.length - 1) {
+    if (uploadIndex !== -1 && uploadIndex < parts.length - 1){
     
     const publicId = parts[uploadIndex + 2];
     const arr = publicId.split(".")
@@ -217,5 +237,5 @@ export {
         deleteBlog, 
         getAllBlogs, 
         getPost,
-        getBlogDetails 
+        getBlogDetails,
   };

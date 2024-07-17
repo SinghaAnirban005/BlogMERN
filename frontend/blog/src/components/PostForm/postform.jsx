@@ -21,7 +21,7 @@ function Postform() {
 
   if(id){
     useEffect(() => {
-      (
+      ;(
         async() => {
           const res = await axios.get(`/api/v1/blogs/get-post/${id}`)
   
@@ -30,7 +30,7 @@ function Postform() {
           }
   
           setValue("title", res.data.data.title)
-          setValue("image", res.data.data.image)
+          setValue("image" ,res.data.data.image)
           setValue("content", res.data.data.content)
         }
       )()

@@ -47,7 +47,7 @@ function Home() {
         </div>
       )}
 
-      {status && !loading && <h1>{`Welcome ${name}`}</h1>}
+      {status && !loading && <h1 className="text-2xl font-bold text-center">{`Welcome ${name}`}</h1>}
     </div>
   );
 }
